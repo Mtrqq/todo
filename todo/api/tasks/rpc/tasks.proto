@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+package rpc;
+option go_package = "github.com/mtrqq/todo/todo/api/tasks/rpc";
+
+import "google/protobuf/timestamp.proto";
+
+message Task {
+    string id = 1;
+    string name = 2;
+    bool completed = 3;
+    google.protobuf.Timestamp started = 4;
+}
+
+message ID {
+    string id = 1;
+}
+
+message ListTasksRequest {
+
+}
+
+message ListTasksResponse {
+    repeated Task tasks = 1;
+}
+
+service TasksAPI {
+    rpc New(Task) returns (ID);
+    rpc Get(ID) returns (Task);
+    rpc Complete(ID) returns (ID);
+    rpc List(ListTasksRequest) returns (ListTasksResponse);
+}
