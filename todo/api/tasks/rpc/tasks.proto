@@ -24,8 +24,12 @@ message ListTasksResponse {
     repeated Task tasks = 1;
 }
 
+message NewTaskRequest {
+    string name = 1;
+}
+
 service TasksAPI {
-    rpc New(Task) returns (ID);
+    rpc New(NewTaskRequest) returns (ID);
     rpc Get(ID) returns (Task);
     rpc Complete(ID) returns (ID);
     rpc List(ListTasksRequest) returns (ListTasksResponse);

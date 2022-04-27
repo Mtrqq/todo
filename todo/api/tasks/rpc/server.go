@@ -54,13 +54,9 @@ func NewTasksAPIServer(ctx context.Context, repositoryUrl string) (TasksAPIServe
 	return tasksAPIServer{repository: repository}, nil
 }
 
-func (api tasksAPIServer) New(ctx context.Context, task *Task) (*ID, error) {
-	repoTask, err := taskFromProto(task)
-	if err != nil {
-		return nil, err
-	}
-
-	repoTask, err = api.repository.Add(ctx, repoTask)
+func (api tasksAPIServer) New(ctx context.Context, task *NewTaskRequest) (*ID, error) {
+	repoTask := todo.NewTask(task.GetName())
+	repoTask, err := api.repository.Add(ctx, repoTask)
 	if err != nil {
 		return nil, err
 	}

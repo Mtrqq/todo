@@ -22,7 +22,7 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type TasksAPIClient interface {
-	New(ctx context.Context, in *Task, opts ...grpc.CallOption) (*ID, error)
+	New(ctx context.Context, in *NewTaskRequest, opts ...grpc.CallOption) (*ID, error)
 	Get(ctx context.Context, in *ID, opts ...grpc.CallOption) (*Task, error)
 	Complete(ctx context.Context, in *ID, opts ...grpc.CallOption) (*ID, error)
 	List(ctx context.Context, in *ListTasksRequest, opts ...grpc.CallOption) (*ListTasksResponse, error)
@@ -36,7 +36,7 @@ func NewTasksAPIClient(cc grpc.ClientConnInterface) TasksAPIClient {
 	return &tasksAPIClient{cc}
 }
 
-func (c *tasksAPIClient) New(ctx context.Context, in *Task, opts ...grpc.CallOption) (*ID, error) {
+func (c *tasksAPIClient) New(ctx context.Context, in *NewTaskRequest, opts ...grpc.CallOption) (*ID, error) {
 	out := new(ID)
 	err := c.cc.Invoke(ctx, "/rpc.TasksAPI/New", in, out, opts...)
 	if err != nil {
@@ -76,7 +76,7 @@ func (c *tasksAPIClient) List(ctx context.Context, in *ListTasksRequest, opts ..
 // All implementations must embed UnimplementedTasksAPIServer
 // for forward compatibility
 type TasksAPIServer interface {
-	New(context.Context, *Task) (*ID, error)
+	New(context.Context, *NewTaskRequest) (*ID, error)
 	Get(context.Context, *ID) (*Task, error)
 	Complete(context.Context, *ID) (*ID, error)
 	List(context.Context, *ListTasksRequest) (*ListTasksResponse, error)
@@ -87,7 +87,7 @@ type TasksAPIServer interface {
 type UnimplementedTasksAPIServer struct {
 }
 
-func (UnimplementedTasksAPIServer) New(context.Context, *Task) (*ID, error) {
+func (UnimplementedTasksAPIServer) New(context.Context, *NewTaskRequest) (*ID, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method New not implemented")
 }
 func (UnimplementedTasksAPIServer) Get(context.Context, *ID) (*Task, error) {
@@ -113,7 +113,7 @@ func RegisterTasksAPIServer(s grpc.ServiceRegistrar, srv TasksAPIServer) {
 }
 
 func _TasksAPI_New_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Task)
+	in := new(NewTaskRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -125,7 +125,7 @@ func _TasksAPI_New_Handler(srv interface{}, ctx context.Context, dec func(interf
 		FullMethod: "/rpc.TasksAPI/New",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TasksAPIServer).New(ctx, req.(*Task))
+		return srv.(TasksAPIServer).New(ctx, req.(*NewTaskRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }

@@ -224,6 +224,53 @@ func (x *ListTasksResponse) GetTasks() []*Task {
 	return nil
 }
 
+type NewTaskRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+}
+
+func (x *NewTaskRequest) Reset() {
+	*x = NewTaskRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_todo_api_tasks_rpc_tasks_proto_msgTypes[4]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *NewTaskRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*NewTaskRequest) ProtoMessage() {}
+
+func (x *NewTaskRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_todo_api_tasks_rpc_tasks_proto_msgTypes[4]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use NewTaskRequest.ProtoReflect.Descriptor instead.
+func (*NewTaskRequest) Descriptor() ([]byte, []int) {
+	return file_todo_api_tasks_rpc_tasks_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *NewTaskRequest) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
 var File_todo_api_tasks_rpc_tasks_proto protoreflect.FileDescriptor
 
 var file_todo_api_tasks_rpc_tasks_proto_rawDesc = []byte{
@@ -245,9 +292,12 @@ var file_todo_api_tasks_rpc_tasks_proto_rawDesc = []byte{
 	0x22, 0x34, 0x0a, 0x11, 0x4c, 0x69, 0x73, 0x74, 0x54, 0x61, 0x73, 0x6b, 0x73, 0x52, 0x65, 0x73,
 	0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x1f, 0x0a, 0x05, 0x74, 0x61, 0x73, 0x6b, 0x73, 0x18, 0x01,
 	0x20, 0x03, 0x28, 0x0b, 0x32, 0x09, 0x2e, 0x72, 0x70, 0x63, 0x2e, 0x54, 0x61, 0x73, 0x6b, 0x52,
-	0x05, 0x74, 0x61, 0x73, 0x6b, 0x73, 0x32, 0x95, 0x01, 0x0a, 0x08, 0x54, 0x61, 0x73, 0x6b, 0x73,
-	0x41, 0x50, 0x49, 0x12, 0x19, 0x0a, 0x03, 0x4e, 0x65, 0x77, 0x12, 0x09, 0x2e, 0x72, 0x70, 0x63,
-	0x2e, 0x54, 0x61, 0x73, 0x6b, 0x1a, 0x07, 0x2e, 0x72, 0x70, 0x63, 0x2e, 0x49, 0x44, 0x12, 0x19,
+	0x05, 0x74, 0x61, 0x73, 0x6b, 0x73, 0x22, 0x24, 0x0a, 0x0e, 0x4e, 0x65, 0x77, 0x54, 0x61, 0x73,
+	0x6b, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x12, 0x0a, 0x04, 0x6e, 0x61, 0x6d, 0x65,
+	0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x32, 0x9f, 0x01, 0x0a,
+	0x08, 0x54, 0x61, 0x73, 0x6b, 0x73, 0x41, 0x50, 0x49, 0x12, 0x23, 0x0a, 0x03, 0x4e, 0x65, 0x77,
+	0x12, 0x13, 0x2e, 0x72, 0x70, 0x63, 0x2e, 0x4e, 0x65, 0x77, 0x54, 0x61, 0x73, 0x6b, 0x52, 0x65,
+	0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x07, 0x2e, 0x72, 0x70, 0x63, 0x2e, 0x49, 0x44, 0x12, 0x19,
 	0x0a, 0x03, 0x47, 0x65, 0x74, 0x12, 0x07, 0x2e, 0x72, 0x70, 0x63, 0x2e, 0x49, 0x44, 0x1a, 0x09,
 	0x2e, 0x72, 0x70, 0x63, 0x2e, 0x54, 0x61, 0x73, 0x6b, 0x12, 0x1c, 0x0a, 0x08, 0x43, 0x6f, 0x6d,
 	0x70, 0x6c, 0x65, 0x74, 0x65, 0x12, 0x07, 0x2e, 0x72, 0x70, 0x63, 0x2e, 0x49, 0x44, 0x1a, 0x07,
@@ -273,18 +323,19 @@ func file_todo_api_tasks_rpc_tasks_proto_rawDescGZIP() []byte {
 	return file_todo_api_tasks_rpc_tasks_proto_rawDescData
 }
 
-var file_todo_api_tasks_rpc_tasks_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
+var file_todo_api_tasks_rpc_tasks_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
 var file_todo_api_tasks_rpc_tasks_proto_goTypes = []interface{}{
 	(*Task)(nil),                  // 0: rpc.Task
 	(*ID)(nil),                    // 1: rpc.ID
 	(*ListTasksRequest)(nil),      // 2: rpc.ListTasksRequest
 	(*ListTasksResponse)(nil),     // 3: rpc.ListTasksResponse
-	(*timestamppb.Timestamp)(nil), // 4: google.protobuf.Timestamp
+	(*NewTaskRequest)(nil),        // 4: rpc.NewTaskRequest
+	(*timestamppb.Timestamp)(nil), // 5: google.protobuf.Timestamp
 }
 var file_todo_api_tasks_rpc_tasks_proto_depIdxs = []int32{
-	4, // 0: rpc.Task.started:type_name -> google.protobuf.Timestamp
+	5, // 0: rpc.Task.started:type_name -> google.protobuf.Timestamp
 	0, // 1: rpc.ListTasksResponse.tasks:type_name -> rpc.Task
-	0, // 2: rpc.TasksAPI.New:input_type -> rpc.Task
+	4, // 2: rpc.TasksAPI.New:input_type -> rpc.NewTaskRequest
 	1, // 3: rpc.TasksAPI.Get:input_type -> rpc.ID
 	1, // 4: rpc.TasksAPI.Complete:input_type -> rpc.ID
 	2, // 5: rpc.TasksAPI.List:input_type -> rpc.ListTasksRequest
@@ -353,6 +404,18 @@ func file_todo_api_tasks_rpc_tasks_proto_init() {
 				return nil
 			}
 		}
+		file_todo_api_tasks_rpc_tasks_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*NewTaskRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
@@ -360,7 +423,7 @@ func file_todo_api_tasks_rpc_tasks_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_todo_api_tasks_rpc_tasks_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   4,
+			NumMessages:   5,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
