@@ -2,12 +2,13 @@
 // versions:
 // - protoc-gen-go-grpc v1.2.0
 // - protoc             v3.20.1
-// source: todo/api/tasks/rpc/tasks.proto
+// source: api/tasks/rpc/tasks.proto
 
 package rpc
 
 import (
 	context "context"
+
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -209,5 +210,5 @@ var TasksAPI_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "todo/api/tasks/rpc/tasks.proto",
+	Metadata: "api/tasks/rpc/tasks.proto",
 }

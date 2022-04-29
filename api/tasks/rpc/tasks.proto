@@ -1,7 +1,7 @@
 syntax = "proto3";
 
 package rpc;
-option go_package = "github.com/mtrqq/todo/todo/api/tasks/rpc";
+option go_package = "github.com/mtrqq/todo/api/tasks/rpc";
 
 import "google/protobuf/timestamp.proto";
 
