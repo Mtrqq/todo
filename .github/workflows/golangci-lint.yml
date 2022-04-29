@@ -6,7 +6,8 @@ on:
     branches:
       - master
   pull_request:
-      - master
+      branches:
+        - master
 permissions:
   contents: read
 jobs:
@@ -22,3 +23,4 @@ jobs:
         uses: golangci/golangci-lint-action@v3
         with:
           version: v1.45.2
+        
