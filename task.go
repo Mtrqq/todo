@@ -15,6 +15,7 @@ type Task struct {
 
 func NewTask(name string) Task {
 	timestamp := time.Now().UTC()
+
 	return Task{
 		ID:        primitive.NewObjectIDFromTimestamp(timestamp),
 		Name:      name,
