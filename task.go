@@ -7,10 +7,10 @@ import (
 )
 
 type Task struct {
-	ID        primitive.ObjectID `bson:"_id"`
-	Name      string             `bson:"name"`
-	Completed bool               `bson:"completed"`
-	Started   time.Time          `bson:"started"`
+	ID        primitive.ObjectID `bson:"_id" json:"id"`
+	Name      string             `bson:"name" json:"name"`
+	Completed bool               `bson:"completed" json:"completed"`
+	Started   time.Time          `bson:"started" json:"started"`
 }
 
 func NewTask(name string) Task {
@@ -19,16 +19,6 @@ func NewTask(name string) Task {
 		ID:        primitive.NewObjectIDFromTimestamp(timestamp),
 		Name:      name,
 		Completed: false,
-		Started:   timestamp,
-	}
-}
-
-func NewCompletedTask(name string) Task {
-	timestamp := time.Now().UTC()
-	return Task{
-		ID:        primitive.NewObjectIDFromTimestamp(timestamp),
-		Name:      name,
-		Completed: true,
 		Started:   timestamp,
 	}
 }
