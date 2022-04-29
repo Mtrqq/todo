@@ -3,8 +3,7 @@ package rpc
 import (
 	"context"
 
-	"github.com/mtrqq/todo/todo"
-	"github.com/mtrqq/todo/todo/repo"
+	"github.com/mtrqq/todo"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
@@ -15,20 +14,6 @@ func idFromProto(id string) (primitive.ObjectID, error) {
 
 func idToProto(id primitive.ObjectID) string {
 	return id.Hex()
-}
-
-func taskFromProto(task *Task) (todo.Task, error) {
-	id, err := idFromProto(task.GetId())
-	if err != nil {
-		return todo.Task{}, err
-	}
-
-	return todo.Task{
-		ID:        id,
-		Name:      task.GetName(),
-		Completed: task.GetCompleted(),
-		Started:   task.GetStarted().AsTime(),
-	}, nil
 }
 
 func taskToProto(task todo.Task) *Task {
@@ -42,16 +27,11 @@ func taskToProto(task todo.Task) *Task {
 
 type tasksAPIServer struct {
 	UnimplementedTasksAPIServer
-	repository *repo.TaskRepository
+	repository todo.TaskRepository
 }
 
-func NewTasksAPIServer(ctx context.Context, repositoryUrl string) (TasksAPIServer, error) {
-	repository, err := repo.Connect(ctx, repositoryUrl)
-	if err != nil {
-		return tasksAPIServer{}, err
-	}
-
-	return tasksAPIServer{repository: repository}, nil
+func NewTasksAPIServer(repository todo.TaskRepository) TasksAPIServer {
+	return tasksAPIServer{repository: repository}
 }
 
 func (api tasksAPIServer) New(ctx context.Context, task *NewTaskRequest) (*ID, error) {

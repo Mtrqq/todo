@@ -8,7 +8,8 @@ import (
 	"net"
 	"os"
 
-	taskrpc "github.com/mtrqq/todo/todo/api/tasks/rpc"
+	"github.com/mtrqq/todo"
+	taskrpc "github.com/mtrqq/todo/api/tasks/rpc"
 	"google.golang.org/grpc"
 )
 
@@ -28,11 +29,12 @@ func main() {
 		log.Fatalf("failed to listen: %v", err)
 	}
 
-	api, err := taskrpc.NewTasksAPIServer(context.Background(), repositoryUrl)
+	repository, err := todo.NewTaskRepository(context.Background(), repositoryUrl)
 	if err != nil {
-		log.Fatalf("Failed to create API server: %v", err)
+		log.Fatalf("Failed to establish repository connection: %v", err)
 	}
 
+	api := taskrpc.NewTasksAPIServer(repository)
 	server := grpc.NewServer()
 	taskrpc.RegisterTasksAPIServer(server, api)
 	log.Printf("server listening at %v", lis.Addr())

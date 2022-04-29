@@ -10,7 +10,7 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 
-	taskrpc "github.com/mtrqq/todo/todo/api/tasks/rpc"
+	taskrpc "github.com/mtrqq/todo/api/tasks/rpc"
 )
 
 var (

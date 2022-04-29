@@ -1,10 +1,9 @@
-package repo
+package todo
 
 import (
 	"context"
 	"errors"
 
-	"github.com/mtrqq/todo/todo"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -14,46 +13,54 @@ import (
 const databaseName = "todo"
 const collectionName = "tasks"
 
-type TaskRepository struct {
+type TaskRepository interface {
+	GetByID(context.Context, primitive.ObjectID) (Task, error)
+	Add(context.Context, Task) (Task, error)
+	List(context.Context) ([]Task, error)
+	Complete(context.Context, Task) (Task, error)
+	CompleteByID(context.Context, primitive.ObjectID) (primitive.ObjectID, error)
+}
+
+type repository struct {
 	client *mongo.Client
 	tasks  *mongo.Collection
 }
 
-func Connect(ctx context.Context, dbUrl string) (*TaskRepository, error) {
+func NewTaskRepository(ctx context.Context, dbUrl string) (TaskRepository, error) {
 	client, err := mongo.Connect(ctx, options.Client().ApplyURI(dbUrl))
 	if err != nil {
 		return nil, err
 	}
 
 	tasks := client.Database(databaseName).Collection(collectionName)
-	return &TaskRepository{client: client, tasks: tasks}, nil
+	return &repository{client: client, tasks: tasks}, nil
 }
 
-func (repo *TaskRepository) Disconnect(ctx context.Context) error {
+func (repo *repository) Disconnect(ctx context.Context) error {
 	return repo.client.Disconnect(ctx)
 }
 
-func (repo *TaskRepository) GetByID(ctx context.Context, id primitive.ObjectID) (todo.Task, error) {
+func (repo *repository) GetByID(ctx context.Context, id primitive.ObjectID) (Task, error) {
 	singleResult := repo.tasks.FindOne(ctx, bson.D{{Key: "_id", Value: id}})
 	if singleResult.Err() != nil {
-		return todo.Task{}, singleResult.Err()
+		return Task{}, singleResult.Err()
 	}
 
-	var task todo.Task
+	var task Task
 	if err := singleResult.Decode(&task); err != nil {
-		return todo.Task{}, err
+		return Task{}, err
 	} else {
 		return task, nil
 	}
 }
 
-func (repo *TaskRepository) Add(ctx context.Context, task todo.Task) (todo.Task, error) {
+func (repo *repository) Add(ctx context.Context, task Task) (Task, error) {
 	insertResult, err := repo.tasks.InsertOne(ctx, task)
 	if err != nil {
-		return todo.Task{}, err
+		return Task{}, err
 	}
 
-	return todo.Task{
+	return Task{
 		ID:        insertResult.InsertedID.(primitive.ObjectID),
 		Name:      task.Name,
 		Completed: task.Completed,
@@ -61,33 +68,33 @@ func (repo *TaskRepository) Add(ctx context.Context, task todo.Task) (todo.Task,
 	}, nil
 }
 
-func (repo *TaskRepository) List(ctx context.Context) ([]todo.Task, error) {
+func (repo *repository) List(ctx context.Context) ([]Task, error) {
 	cursor, err := repo.tasks.Find(ctx, bson.D{})
 	if err != nil {
-		return []todo.Task{}, nil
+		return []Task{}, nil
 	}
 	defer cursor.Close(ctx)
 
-	tasks := make([]todo.Task, 0)
+	tasks := make([]Task, 0)
 	if err := cursor.All(ctx, &tasks); err != nil {
-		return []todo.Task{}, nil
+		return []Task{}, nil
 	}
 
 	return tasks, nil
 }
 
-func (repo *TaskRepository) Complete(ctx context.Context, task todo.Task) (todo.Task, error) {
+func (repo *repository) Complete(ctx context.Context, task Task) (Task, error) {
 	if task.Completed {
-		return todo.Task{}, errors.New("task is already completed")
+		return Task{}, errors.New("task is already completed")
 	}
 
 	updates := bson.D{{Key: "$set", Value: bson.D{{Key: "completed", Value: true}}}}
 	_, err := repo.tasks.UpdateByID(ctx, task.ID, updates)
 	if err != nil {
-		return todo.Task{}, err
+		return Task{}, err
 	}
 
-	return todo.Task{
+	return Task{
 		ID:        task.ID,
 		Name:      task.Name,
 		Completed: true,
@@ -95,7 +102,7 @@ func (repo *TaskRepository) Complete(ctx context.Context, task todo.Task) (todo.
 	}, nil
 }
 
-func (repo *TaskRepository) CompleteByID(ctx context.Context, id primitive.ObjectID) (primitive.ObjectID, error) {
+func (repo *repository) CompleteByID(ctx context.Context, id primitive.ObjectID) (primitive.ObjectID, error) {
 	task, err := repo.GetByID(ctx, id)
 	if err != nil {
 		return primitive.ObjectID{}, err
